@@ -16,13 +16,15 @@ aria2 = aria2p.API(
 )
 
 async def download_video(url, reply_msg, user_mention, user_id):
-    # Fetch API data
-    response = requests.get(f"https://terabox.udayscriptsx.workers.dev/?url={url}")
-    response.raise_for_status()
-    data = response.json()
+    try:
+        # Fetch video information using the updated API
+        response = requests.get(f"https://tbox-vids.vercel.app/api?data={url}")
+        response.raise_for_status()
+        data = response.json()
 
-    if not data:
-        raise Exception("API response is empty or invalid.")
+        # Validate response
+        if "file_name" not in data or "direct_link" not in data:
+            raise Exception("Invalid API response")
 
     video_file_name = data.get("file_name")
     fast_download_link = data.get("direct_link")
